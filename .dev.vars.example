@@ -1,0 +1,5 @@
+# Backend configuration. Copy this file to .dev.vars for local Wrangler.
+# Use the same Firebase project ID as VITE_FIREBASE_PROJECT_ID in .env.local.
+FIREBASE_PROJECT_ID=your-firebase-project-id
+# Exactly two distinct email addresses, separated by a comma.
+ALLOWED_EMAILS=person-a@example.com,person-b@example.com

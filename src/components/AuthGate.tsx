@@ -1,0 +1,20 @@
+import { useState } from 'react';
+import { createUserWithEmailAndPassword, reload, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut, type User } from 'firebase/auth';
+import { Heart, KeyRound, Leaf } from 'lucide-react';
+import { auth } from '../lib/firebase';
+export function AuthGate({ user, onVerified }: { user: User | null; onVerified: () => void }) {
+  const [mode, setMode] = useState<'login' | 'register' | 'reset'>('login'), [email, setEmail] = useState(''), [password, setPassword] = useState(''), [notice, setNotice] = useState(''), [busy, setBusy] = useState(false);
+  const act = async (work: () => Promise<void>) => { setBusy(true); setNotice(''); try { await work(); } catch { setNotice('No se ha podido completar. Revisa los datos y vuelve a intentarlo en unos instantes.'); } finally { setBusy(false); } };
+  return <main className="welcome"><div className="welcome-decoration"><Leaf size={32} /><span>un lugar para los dos</span></div><section className="welcome-card"><span className="eyebrow"><Heart size={14} /> OUR COZY ROOM</span><h1>{user ? 'Casi estás en casa.' : 'Qué bonito coincidir contigo.'}</h1>
+    {user ? <><p>Confirma tu correo desde el enlace que te hemos enviado. Tu casa solo admite los dos correos autorizados.</p><button disabled={busy} className="button primary wide" onClick={() => void act(async () => { await reload(user); await user.getIdToken(true); if (user.emailVerified) onVerified(); else setNotice('Todavía no aparece confirmado. Revisa tu correo, incluida la carpeta de spam.'); })}>Ya he confirmado mi correo</button><button disabled={busy} className="text-button" onClick={() => void act(async () => { await sendEmailVerification(user); setNotice('Correo enviado. Revisa tu bandeja de entrada.'); })}>Reenviar correo</button><button className="text-button" onClick={() => void signOut(auth!)}>Usar otra cuenta</button></> : <><p>{mode === 'register' ? 'Crea tu cuenta con uno de los correos de vuestra casa.' : mode === 'reset' ? 'Te enviaremos un enlace para elegir otra contraseña.' : 'Tu pequeño refugio, al otro lado de la pantalla.'}</p>
+      <form onSubmit={e => { e.preventDefault(); void act(async () => {
+        if (mode === 'reset') { await sendPasswordResetEmail(auth!, email); setNotice('Si la cuenta existe, recibirás un enlace para restablecer la contraseña.'); return; }
+        if (mode === 'register') { const result = await createUserWithEmailAndPassword(auth!, email, password); await sendEmailVerification(result.user); }
+        else { const result = await signInWithEmailAndPassword(auth!, email, password); if (!result.user.emailVerified) setNotice('Confirma tu correo para continuar.'); }
+      }); }}>
+        <label className="field-label">Tu correo<input type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required /></label>
+        {mode !== 'reset' ? <label className="field-label">Contraseña<input type="password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} minLength={mode === 'register' ? 12 : 1} value={password} onChange={e => setPassword(e.target.value)} required />{mode === 'register' ? <small>Al menos 12 caracteres.</small> : null}</label> : null}
+        <button className="button primary wide" disabled={busy}><KeyRound size={16} />{busy ? 'Un momento…' : mode === 'register' ? 'Crear mi cuenta' : mode === 'reset' ? 'Enviar enlace' : 'Entrar en casa'}</button>
+      </form><div className="auth-links"><button className="text-button" onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setNotice(''); }}>{mode === 'register' ? 'Ya tengo una cuenta' : 'Crear mi cuenta'}</button><button className="text-button" onClick={() => { setMode(mode === 'reset' ? 'login' : 'reset'); setNotice(''); }}>{mode === 'reset' ? 'Volver al acceso' : 'He olvidado mi contraseña'}</button></div></>}
+    <p role="status" className="auth-notice">{notice}</p></section><p className="welcome-footer">Una casa pequeña. Una compañía enorme.</p></main>;
+}
