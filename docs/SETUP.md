@@ -101,7 +101,7 @@ Con las dos cuentas dentro, comprobar manualmente:
 
 1. Cada una aparece conectada en «Al otro lado» de la otra ventana.
 2. Cambiar el personaje y caminar; comprobar que el otro cliente recibe los cambios.
-3. Enviar un mensaje de prueba desde cada ventana y activar voluntariamente los avisos sonoros en la receptora.
+3. Hacer clic o pulsar una tecla en cada ventana para permitir el audio del navegador. Los avisos están activos por defecto. Desde una cuenta, cambiar a otra pestaña; desde la otra, entrar en la sala y enviar un mensaje. Comprobar el sonido suave y el aviso en el título, que se limpia al volver. Silenciar con el altavoz y recargar: debe conservarse el silencio, pero mantenerse el aviso del título.
 4. Iniciar tareas de distinta duración: cada contador debe ser independiente y verse el estado de la pareja.
 5. Recargar una ventana: recupera su personaje, tarea y mensajes recientes.
 6. Cerrar una ventana: el otro cliente deja de mostrarla como conectada. Volver a entrar y comprobar recuperación.

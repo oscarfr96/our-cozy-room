@@ -21,6 +21,41 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('Avisos de mensajes en la pestaña', () => {
+  it('avisa de la llegada ajena en segundo plano, sin confundir presencia inicial o snapshots repetidos', () => {
+    const arrival = vi.fn();
+    const notices = createMessageNotifications('self', vi.fn(), arrival);
+    page.hidden = true;
+    notices.receivePresence(['self', 'partner']);
+    expect(arrival).not.toHaveBeenCalled();
+    notices.receivePresence(['self']);
+    notices.receivePresence(['self', 'partner']);
+    notices.receivePresence(['self', 'partner']);
+    expect(arrival).toHaveBeenCalledTimes(1);
+    expect(page.title).toBe('🏡 Tu persona ha llegado · Our Cozy Room');
+    page.hidden = false;
+    browser.dispatchEvent(new Event('focus'));
+    expect(page.title).toBe('Our Cozy Room · Un lugar para los dos');
+    notices.dispose();
+  });
+
+  it('ignora nuestra llegada y la recuperación de conexión, y conserva los mensajes pendientes frente a una llegada', () => {
+    const arrival = vi.fn();
+    const notices = createMessageNotifications('self', vi.fn(), arrival);
+    page.hidden = true;
+    notices.receivePresence([]);
+    notices.receivePresence(['self']);
+    notices.resetPresence();
+    notices.receivePresence(['self', 'partner']);
+    expect(arrival).not.toHaveBeenCalled();
+    notices.receive([]);
+    notices.receive([message('one')]);
+    notices.receivePresence(['self']);
+    notices.receivePresence(['self', 'partner']);
+    expect(arrival).toHaveBeenCalledTimes(1);
+    expect(page.title).toBe('💌 Tienes un mensaje · Our Cozy Room');
+    notices.dispose();
+  });
+
   it('ignora el historial inicial y los mensajes propios', () => {
     const sound = vi.fn();
     const notices = createMessageNotifications('self', sound);

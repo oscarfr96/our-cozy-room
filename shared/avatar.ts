@@ -32,7 +32,7 @@ export function avatarPixels(input: Avatar, direction = 0, seated = false, step 
     if(a.bottoms==='skirt'){rect(9,32,15,5,a.trousers);rect(7,36,16,3,a.trousers);}
     for(const [x,y] of [[4,43],[13,42]]){rect(x,y,8,3,shade(a.shoes,-22));rect(x+1,y,6,2,a.shoes);rect(x,y+3,8,1,border);}
   }
-  rect(12, 20, 8, 5, skinShadow); rect(13, 20, 6, 4, a.skin);
+  rect(12, 20, 8, 5, a.skin);
   rect(9, 24, 15, 10, fabricShadow); rect(10, 24, 12, 9, a.shirt); rect(6, 25, 4, 10, fabricShadow); rect(23, 25, 4, 10, a.shirt);
   rect(6, 35, 4, 3, skinShadow); rect(24, 35, 3, 3, a.skin); rect(10, 32, 13, 2, fabricShadow);
   if (a.outfit === 'tee') { rect(6, 29, 4, 8, skinShadow); rect(24, 29, 3, 8, a.skin); rect(13, 24, 7, 1, fabricShadow); }
@@ -50,11 +50,13 @@ export function avatarPixels(input: Avatar, direction = 0, seated = false, step 
     rect(11, 33, 4, 3, a.skin); rect(19, 33, 4, 3, a.skin);
   }
   // The jaw tapers in skin tones. Facial hair is added separately below.
-  rect(8, 6, 16, 13, skinShadow); rect(9, 5, 14, 14, a.skin);
+  rect(8, 6, 16, 13, shade(a.skin, -10)); rect(9, 5, 14, 14, a.skin);
   rect(10, 19, 12, 2, a.skin); rect(12, 21, 8, 1, a.skin);
   rect(7, 12, 2, 5, skinShadow); rect(23, 12, 2, 5, a.skin); rect(9, 9, 1, 8, shade(a.skin, 15));
   if (!back) {
-    rect(11 + shift, 12, 2, 2, border); rect(19 + shift, 12, 2, 2, border); rect(16 + shift, 14, 2, 2, skinShadow); rect(15 + shift, 19, 4, 1, '#a46c59');
+    rect(11 + shift, 12, 2, 2, border); rect(19 + shift, 12, 2, 2, border);
+    rect(17 + shift, 15, 1, 1, shade(a.skin, -12));
+    rect(16 + shift, 18, 2, 1, shade(a.skin, -32));
     if (a.facialHair === 'beard') { rect(10, 17, 2, 4, beardShadow); rect(21, 17, 2, 4, beardShadow); rect(11, 20, 11, 2, beardShadow); rect(13, 21, 7, 2, a.beard); }
     if (a.facialHair === 'goatee') { rect(14, 20, 6, 3, a.beard); rect(15, 22, 4, 1, beardShadow); }
     if (a.facialHair !== 'none') { rect(13 + shift, 17, 3, 1, a.beard); rect(17 + shift, 17, 3, 1, a.beard); rect(12 + shift, 18, 4, 1, beardShadow); rect(17 + shift, 18, 4, 1, beardShadow); }

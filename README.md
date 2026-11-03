@@ -37,7 +37,7 @@ El banner es una ilustración promocional generada con IA. La siguiente imagen e
 | --- | --- |
 | **Estar juntos** | Dos personajes en una sala isométrica compartida, movimiento por clic, dos escritorios y un sofá con dos plazas. Al pulsar un asiento, el personaje camina y se sienta al llegar. |
 | **Concentrarse** | Tareas individuales de 1 a 240 minutos, con pausa y reanudación. En «Al otro lado» ves la tarea, el estado, la duración y el tiempo restante de la otra persona conectada. |
-| **Dar compañía** | Mensajes en bocadillos, avisos sonoros opcionales, contador en el título de la pestaña y abrazos y ánimos al acercaros. |
+| **Dar compañía** | Mensajes en bocadillos, avisos sonoros silenciables, contador en el título de la pestaña y abrazos y ánimos al acercaros. |
 | **Pareceros a vosotros** | Editor manual con piel, siete peinados, barba, bigote, gafas y ropa. Pelo y barba tienen colores independientes. |
 | **Hacer una pausa** | Un gato gris y un perrito dorado que pasean, descansan y vuelven a sus camas. Puedes acercarte y acariciarlos. |
 | **Poner algo de fondo** | TV mural con enlaces de YouTube, mando plegable y volumen individual. Tres grabaciones de piano con selector, pausa y volumen. |
@@ -154,7 +154,7 @@ El [documento de arquitectura](docs/ARCHITECTURE.md) explica persistencia, hiber
 
 - **Acceso privado.** Tener una cuenta Firebase no basta. El backend exige un correo verificado autorizado y mantiene un máximo de dos miembros.
 - **Historial acotado.** Se conservan los diez mensajes más recientes dentro de una ventana de 24 horas. El borrado físico por antigüedad ocurre en la siguiente carga o mutación del estado.
-- **Avisos al otro lado.** Activa el altavoz de la cabecera para escuchar un aviso suave con los mensajes recibidos. Si la habitación está en otra pestaña o ventana sin foco, el título muestra «💌 Tienes un mensaje» y acumula los mensajes nuevos. Se limpia al volver. El título avisa también con el sonido desactivado. La pestaña debe permanecer abierta y conectada; la suspensión del navegador puede retrasar la recepción.
+- **Avisos al otro lado.** Los avisos suaves están activos por defecto: suenan cuando llega la otra persona o recibes un mensaje. Puedes silenciarlos con el altavoz de la cabecera; se recuerda tu elección en este navegador. El audio se prepara automáticamente al hacer clic, tocar o pulsar una tecla, también al iniciar sesión, sin tener que activar el altavoz. El navegador puede bloquearlo antes de esa primera interacción. Si la habitación está en otra pestaña o ventana sin foco, el título muestra «💌 Tienes un mensaje» y acumula los mensajes nuevos. Se limpia al volver. La llegada también se anuncia en el título. No se avisa de personas que ya estaban conectadas al entrar o recuperar tu conexión. El título avisa también con el sonido desactivado. La pestaña debe permanecer abierta y conectada; la suspensión del navegador puede retrasar la recepción.
 - **Música individual.** Las grabaciones de piano se sirven desde vuestra instalación. Cada persona controla su reproducción y los créditos permanecen visibles.
 - **TV compartida.** Encender o cambiar el vídeo afecta a ambos. Cada persona elige su volumen. YouTube se carga al encender la TV y recibe las peticiones habituales del navegador. La sincronización se calcula al entrar, con las limitaciones de autoplay, anuncios, pausa local y suspensión de pestañas.
 - **Datos locales.** La demostración conserva su estado en el navegador. La casa conectada utiliza el estado de Cloudflare.

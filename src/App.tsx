@@ -4,7 +4,7 @@ import { Armchair, ArrowUpRight, Check, ChevronDown, Coffee, Heart, House, Leaf,
 import { emptyRoom, focusRemaining, SEATS, type Action, type Snapshot } from '../shared/model';
 import { auth, firebaseConfigured } from './lib/firebase';
 import { localClient, remoteClient, type Connection, type RoomClient } from './lib/room-client';
-import { chime, enableSound } from './lib/sound';
+import { chime, enableSound, prepareSound, saveSoundPreference, soundEnabled } from './lib/sound';
 import { createMessageNotifications } from './lib/message-notifications';
 import { AvatarPreview } from './components/AvatarPreview';
 import { FocusPanel } from './components/FocusPanel';
@@ -20,6 +20,7 @@ const preview = new URLSearchParams(location.search).get('demo') === '1' || (imp
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null), [ready, setReady] = useState(!auth), [, refresh] = useState(0);
+  useEffect(prepareSound, []);
   useEffect(() => { if (!auth) return; return onAuthStateChanged(auth, next => { setUser(next); setReady(true); }); }, []);
   if (!preview && !firebaseConfigured) return <main className="welcome"><section className="welcome-card"><Leaf size={32} /><h1>Tu casa está por empezar.</h1><p>Esta instalación todavía no tiene configuradas las cuentas. Sigue la guía de despliegue incluida en el repositorio.</p><a className="button primary" href="?demo=1">Explorar la vista local <ArrowUpRight size={17} /></a><p className="muted">La vista local no conecta con otras personas.</p></section></main>;
   if (!ready) return <main className="welcome"><p>Preparando vuestra casa…</p></main>;
@@ -39,27 +40,39 @@ function Home({ user }: { user: User | null }) {
   const openTelevision = useCallback(() => setTvEditing(true), []);
   const [visualHour, setVisualHour] = useState<number | null>(null);
   const [toast, setToast] = useState(''), [editor, setEditor] = useState(false), [message, setMessage] = useState(''), [history, setHistory] = useState(false);
-  const [sound, setSound] = useState(false), [time, setTime] = useState(Date.now());
+  const [sound, setSound] = useState(soundEnabled), [time, setTime] = useState(Date.now());
   const client = useRef<RoomClient | null>(null), offset = useRef(0), soundRef = useRef(sound);
   soundRef.current = sound;
   const announce = useCallback((text: string) => setToast(text), []);
   useEffect(() => { if (!toast) return; const timer = setTimeout(() => setToast(''), 6000); return () => clearTimeout(timer); }, [toast]);
   useEffect(() => {
-    const notifications = createMessageNotifications(user?.uid ?? 'local', () => {
+    const notify = () => {
       if (soundRef.current) void chime();
+    };
+    const notifications = createMessageNotifications(user?.uid ?? 'local', notify, () => {
+      announce('Tu persona acaba de entrar. Ya estáis en casa. ♡');
+      notify();
     });
     const receive = (next: Snapshot) => {
       offset.current = next.now - Date.now();
       setSnapshot(previous => ({ ...next, selfId: next.selfId ?? previous.selfId }));
       notifications.receive(next.state.messages);
+      notifications.receivePresence(next.online);
     };
-    client.current = user ? remoteClient(user, receive, status => { setConnection(status); if (status === 'online') setConnectionError(''); }, error => { setConnectionError(error); announce(error); }) : localClient(receive, announce);
+    client.current = user ? remoteClient(user, receive, status => { setConnection(status); if (status === 'online') setConnectionError(''); else notifications.resetPresence(); }, error => { setConnectionError(error); announce(error); }) : localClient(receive, announce);
     return () => { client.current?.close(); notifications.dispose(); };
   }, [user, announce]);
   useEffect(() => { const timer = setInterval(() => setTime(Date.now()), 1000); return () => clearInterval(timer); }, []);
   useEffect(() => { if (connection === 'offline' || connection === 'replaced') setSnapshot(s => ({ ...s, online: [] })); }, [connection]);
   const send = useCallback((action: Action) => client.current?.send(action) ?? false, []);
   const complete = useCallback(() => { announce('Tu momento de foco ha terminado. Es hora de estirarte un poquito.'); if (soundRef.current) chime(); }, [announce]);
+  const toggleSound = () => {
+    const enabled = !sound;
+    soundRef.current = enabled;
+    setSound(enabled);
+    saveSoundPreference(enabled);
+    if (enabled) void enableSound().then(() => chime()).catch(() => announce('El navegador no permite activar el sonido. Revisa los permisos de esta página.'));
+  };
   const selfId = snapshot.selfId ?? user?.uid ?? 'local', member = snapshot.state.members[selfId];
   const partner = Object.values(snapshot.state.members).find(m => m.id !== selfId), partnerHere = !!partner && snapshot.online.includes(partner.id);
   const partnerFocus = partnerHere ? partner?.focus : null;
@@ -73,7 +86,7 @@ function Home({ user }: { user: User | null }) {
   return <div className={`app ${sceneNight ? 'night' : ''} ${ambientView ? 'ambient-view' : ''}`}>
     <header className="topbar"><a className="brand" href={preview ? '?demo=1' : '/'} aria-label="Our Cozy Room, inicio"><span className="brand-house"><House size={23} strokeWidth={1.8} /></span><div>our cozy room<span>UN LUGAR PARA LOS DOS</span></div><Leaf size={18} className="brand-leaf" /></a>
       <div className="clock"><time dateTime={date.toISOString()}>{date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</time><span>{date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</span></div>
-      <nav className="header-actions" aria-label="Preferencias"><button className="ambient-toggle" aria-pressed={ambientView} onClick={() => setAmbientView(v => !v)}>{ambientView ? 'Ver mis tareas' : 'Modo ambiente'}</button><span className="time-of-day">{night ? <Moon size={15} /> : <Sun size={17} />}{night ? 'Buenas noches' : 'Un día bonito'}</span><button className="icon-button" title={sound ? "Avisos suaves para mensajes y fin de foco" : "Activa el sonido para escuchar los mensajes, también en otra pestaña"} aria-label={sound ? 'Desactivar avisos sonoros' : 'Activar avisos sonoros'} aria-pressed={sound} onClick={() => void (async () => { try { await enableSound(); setSound(!sound); if (!sound) chime(); } catch { announce('El navegador no permite activar el sonido.'); } })()}>{sound ? <Volume2 size={20} /> : <VolumeX size={20} />}</button>{user ? <button className="icon-button" aria-label="Cerrar sesión" onClick={() => void signOut(auth!).catch(() => announce('No se pudo cerrar sesión. Vuelve a intentarlo.'))}><LogOut size={19} /></button> : null}</nav>
+      <nav className="header-actions" aria-label="Preferencias"><button className="ambient-toggle" aria-pressed={ambientView} onClick={() => setAmbientView(v => !v)}>{ambientView ? 'Ver mis tareas' : 'Modo ambiente'}</button><span className="time-of-day">{night ? <Moon size={15} /> : <Sun size={17} />}{night ? 'Buenas noches' : 'Un día bonito'}</span><button className="icon-button" title={sound ? "Avisos suaves de llegada, mensajes y fin de foco" : "Activa el sonido para escuchar los mensajes, también en otra pestaña"} aria-label={sound ? 'Desactivar avisos sonoros' : 'Activar avisos sonoros'} aria-pressed={sound} onClick={toggleSound}>{sound ? <Volume2 size={20} /> : <VolumeX size={20} />}</button>{user ? <button className="icon-button" aria-label="Cerrar sesión" onClick={() => void signOut(auth!).catch(() => announce('No se pudo cerrar sesión. Vuelve a intentarlo.'))}><LogOut size={19} /></button> : null}</nav>
     </header>
     <main className="workspace">
       <section className="room-area" aria-label="Vuestra habitación">

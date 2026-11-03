@@ -32,6 +32,10 @@ describe('Armario ampliado y perfiles anteriores', () => {
         for (let x = 14; x <= 19; x++) for (const y of [20, 21]) {
           expect(pixels.find(p => p.x === x && p.y === y)?.color).toBe(skin);
         }
+        // The exposed neck must not recreate a dark band just below the chin.
+        for (const x of [12, 19]) for (const y of [22, 23]) {
+          expect(avatarPixels({ ...avatar, outfit: 'tee' }, direction, seated).find(p => p.x === x && p.y === y)?.color).toBe(skin);
+        }
       }
     }
   });
