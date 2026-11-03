@@ -218,7 +218,7 @@ El código, escenario procedural y definiciones originales de personajes se dist
 
 Las tres grabaciones de A-M Classical se distribuyen bajo **CC BY 3.0 US** y conservan su atribución en la interfaz y en los [créditos de audio](public/audio/CREDITS.md). Los vídeos de YouTube pertenecen a sus titulares. Las dependencias mantienen sus licencias.
 
-El banner es una ilustración editorial generada con IA, inspirada en la sala. Las imágenes de la sección de producto son capturas reales con datos ficticios. La procedencia de los recursos está documentada en [docs/ASSETS.md](docs/ASSETS.md).
+El banner combina tipografía y una captura del motor real del juego. Las imágenes de producto utilizan personajes y datos ficticios. La procedencia de los recursos está documentada en [docs/ASSETS.md](docs/ASSETS.md).
 
 <div align="center">
 
