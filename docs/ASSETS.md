@@ -12,13 +12,13 @@ La dirección visual se inspira en los espacios sociales isométricos y los jueg
 
 | Archivo | Procedencia | Uso |
 | --- | --- | --- |
-| `docs/media/github-banner.png` | Ilustración editorial generada con IA a partir de una captura de la sala como referencia artística | Banner del README |
+| `docs/media/github-banner-real.png` | Composición tipográfica con una captura del renderer real, sin redibujar el escenario ni los personajes; datos ficticios de demostración | Banner del README |
 | `docs/media/room-overview.png` | Captura real de una demostración local con nombre y tarea ficticios | Mostrar el producto implementado |
 | `docs/media/wardrobe.png` | Captura real del editor con personaje ficticio | Mostrar la personalización manual |
 
-La ilustración del banner contiene variaciones de detalle respecto al dibujo en ejecución. Las capturas de producto muestran el renderer de la aplicación. Las piezas promocionales no forman parte del motor del juego ni de una función de generación de avatares.
+El banner utiliza los mismos `RoomCanvas`, `RoomScene` y avatares que la aplicación. La escena contiene dos personajes ficticios sentados en sus escritorios y una iluminación de demostración disponible en el juego. El fondo, la tipografía y los textos exteriores componen la pieza promocional; el mobiliario y los personajes se capturan directamente del motor, sin generación ni retoque con IA. No contiene cuentas, mensajes ni datos de una casa privada.
 
-El arte original y el material editorial propio se ofrecen bajo la licencia MIT del repositorio, en la medida de los derechos disponibles. Se documenta el origen generado con IA del banner.
+El arte original y el material editorial propio se ofrecen bajo la licencia MIT del repositorio, en la medida de los derechos disponibles. El banner actual sustituye la ilustración conceptual anterior generada con IA, que no representaba fielmente el producto y ya no se distribuye como su imagen promocional.
 
 ## Piano
 

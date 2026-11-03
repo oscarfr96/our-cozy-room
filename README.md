@@ -1,6 +1,6 @@
 <div align="center">
 
-![Our Cozy Room, una habitación cálida para compartir el día](docs/media/github-banner.png)
+![Our Cozy Room, una habitación cálida para compartir el día](docs/media/github-banner-real.png)
 
 # Our Cozy Room
 
@@ -27,7 +27,7 @@ Entra en vuestra casa y encuentra a tu persona trabajando junto a la ventana. Si
 
 Una persona prepara la instalación una vez. Después, cada uno entra desde su navegador con su propia cuenta y correo verificado. La casa vive en Cloudflare y se recupera al acceder, sin mantener un ordenador anfitrión encendido.
 
-El banner es una ilustración promocional generada con IA. La siguiente imagen es una captura real de la aplicación con datos ficticios.
+El banner muestra el escenario dibujado por el motor real del juego, con personajes ficticios de demostración. La siguiente imagen muestra la interfaz completa de la aplicación.
 
 ![Captura real de la habitación, el foco y los controles en la demo](docs/media/room-overview.png)
 
