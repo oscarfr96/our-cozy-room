@@ -1,11 +1,9 @@
 node_modules/
 dist/
 .wrangler/
-.env
-.env.*
+.env*
 !.env.example
-.dev.vars
-.dev.vars.*
+.dev.vars*
 !.dev.vars.example
 coverage/
 test-results/
@@ -14,7 +12,6 @@ test-results/
 
 # Local collaboration notes and installation-specific work
 /PLAN_MAESTRO.md
-/AGENTS.md
 /.agents/
 /.codex/
 /.local/
@@ -27,6 +24,17 @@ test-results/
 # Private credentials, exports and local editor files
 *.pem
 *.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.db
+.npmrc
+.firebase/
+.secrets/
+secrets/
 *service-account*.json
 *serviceAccount*.json
 firebase-adminsdk-*.json

@@ -20,7 +20,9 @@
 - CSP permite únicamente los hosts necesarios de YouTube para scripts/frames. El iframe envía el origen como Referer mediante `strict-origin-when-cross-origin`, requerido por YouTube; el resto de la página conserva `no-referrer`. No se envían tokens Firebase ni mensajes de la sala al reproductor.
 - Revisar la presentación, privacidad y condiciones vigentes del reproductor antes de publicar. No se elimina publicidad ni se extrae audio.
 
-## Pendiente antes de producción pública
+## Límites operativos de cada casa
+
+El código del repositorio es público; las casas que se instalan con él requieren identidad y autorización. Publicar el código no abre el acceso a los datos de una pareja. Los siguientes puntos siguen pendientes de endurecimiento o validación en cada instalación.
 
 1. La verificación JWT no consulta revocación de Firebase en cada operación. Un token emitido puede conservar validez hasta su vencimiento, normalmente alrededor de una hora. Deshabilitar una cuenta en Firebase no implica revocación inmediata en este backend. Implementar y verificar revocación administrativa por UID antes de anunciar esa capacidad.
 2. La lista de correos cambia al actualizar secretos/despliegue; verificar cierre de conexiones y sustitución de miembros. El esquema actual no permite añadir indefinidamente UIDs nuevos.
@@ -31,6 +33,12 @@
 7. Verificar las cabeceras y recuperación de cuentas en el dominio real. Revisar el CSP con todos los flujos de Firebase utilizados.
 
 No se ha realizado una auditoría externa ni una prueba de carga de producción. Las pruebas locales son evidencia acotada, no una certificación.
+
+## Proteger un fork y su historial
+
+Las únicas plantillas de entorno distribuibles son `.env.example` y `.dev.vars.example`. La configuración real, el estado local y las claves quedan ignorados. `npm run check:public -- --history` revisa los archivos candidatos y objetos de los commits accesibles; CI lo ejecuta con el historial completo. Detecta rutas privadas, algunos formatos de tokens y claves, coincidencias con valores de `.env.local`/`.dev.vars` y enlaces locales rotos. Solo muestra archivo y categoría, sin el contenido encontrado.
+
+El análisis no interpreta imágenes ni reconoce todo posible secreto. Revisa capturas y cambios antes de publicarlos. Si una credencial se expuso, revócala o rótala: borrarla del último commit no basta para quitarla del historial. La configuración web Firebase se incorpora al frontend y es pública por diseño; nunca debe contener credenciales administrativas. No se necesita una cuenta de servicio para instalar este proyecto.
 
 ## Reportar problemas
 

@@ -28,6 +28,7 @@ Una función que necesita servicios externos debe explicar la configuración y e
 Ejecuta las comprobaciones antes de abrir la solicitud.
 
 ```sh
+npm run check:public -- --history
 npm test
 npm run test:integration
 ```
@@ -39,6 +40,8 @@ En el pull request explica el problema, el resultado visible y las comprobacione
 ## Datos y licencias
 
 Los archivos de configuración con valores reales y el estado local permanecen fuera de Git. Revisa los archivos que vas a incluir antes de hacer commit. No subas volcados de casas ni exportaciones de cuentas.
+
+`AGENTS.md` y `docs/AI_SETUP.md` son públicos y deben servir en cualquier clon. No añadas rutas de tu equipo, datos de tu instalación o notas de una sesión privada. La continuidad local puede guardarse en `.local/`, que está ignorada. Si modificas scripts de instalación, conserva su salida sin credenciales y comprueba el caso de clon limpio.
 
 Las contribuciones de código se distribuyen bajo [MIT](LICENSE). Las grabaciones de piano mantienen su licencia y atribución propias. Consulta [ASSETS](docs/ASSETS.md) antes de sustituir o añadir recursos.
 

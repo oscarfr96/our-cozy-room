@@ -12,10 +12,13 @@ jobs:
       WRANGLER_SEND_METRICS: 'false'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
+      - run: npm run check:public -- --history
       - run: npm ci
       - run: npm test
       - run: npm run test:integration

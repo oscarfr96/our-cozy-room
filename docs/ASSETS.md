@@ -20,6 +20,8 @@ El banner utiliza los mismos `RoomCanvas`, `RoomScene` y avatares que la aplicac
 
 El arte original y el material editorial propio se ofrecen bajo la licencia MIT del repositorio, en la medida de los derechos disponibles. El banner actual sustituye la ilustración conceptual anterior generada con IA, que no representaba fielmente el producto y ya no se distribuye como su imagen promocional.
 
+Los personajes de la composición promocional se llaman **Óscar y Ligia**, nombres incluidos con autorización expresa. Son una escena preparada para ilustrar el juego; no se ha capturado el estado ni una conversación de una casa privada. Quien instale un clon puede personalizar sus propios personajes desde el editor.
+
 ## Piano
 
 Las tres grabaciones de A-M Classical se distribuyen bajo CC BY 3.0 US y son una excepción a la licencia MIT del código. Se sirven como archivos originales sin modificar. Conserva tanto los [créditos de audio](../public/audio/CREDITS.md) como la atribución visible del reproductor al redistribuirlos.

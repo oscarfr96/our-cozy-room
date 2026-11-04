@@ -2,6 +2,8 @@
 
 Esta guía instala una casa privada para dos personas. Solo una persona configura los servicios y administra el despliegue. Después, cada una entra con su cuenta desde cualquier equipo.
 
+Si usas Codex u otro agente, comienza por [la guía de instalación asistida](AI_SETUP.md). `AGENTS.md` contiene las instrucciones públicas del proyecto. Esta guía mantiene el recorrido manual del mismo despliegue.
+
 ## Antes de empezar
 
 Necesitas Node.js 22.12 o posterior, npm, acceso a tu correo y cuentas de Firebase y Cloudflare. Parte de un clon o una descarga de este repositorio y ejecuta los comandos desde su carpeta.
@@ -13,11 +15,11 @@ Necesitas Node.js 22.12 o posterior, npm, acceso a tu correo y cuentas de Fireba
 En PowerShell puedes crear las copias con estos comandos.
 
 ```powershell
-Copy-Item .env.example .env.local
-Copy-Item .dev.vars.example .dev.vars
+if (-not (Test-Path .env.local)) { Copy-Item .env.example .env.local }
+if (-not (Test-Path .dev.vars)) { Copy-Item .dev.vars.example .dev.vars }
 ```
 
-En macOS y Linux utiliza `cp` en lugar de `Copy-Item`. Si los archivos de destino ya existen, revísalos y conserva los valores que necesites.
+En macOS y Linux utiliza `test -f .env.local || cp .env.example .env.local` y el equivalente para `.dev.vars`. Si ya existen los archivos, revísalos y conserva sus valores.
 
 El despliegue utiliza Firebase Authentication y Cloudflare Static Assets, Workers y Durable Objects SQLite. El objetivo son los planes gratuitos, sujetos a cuotas. Revisa las [limitaciones conocidas](../SECURITY.md) y las condiciones de los proveedores.
 ## 1. Crear Firebase y habilitar cuentas con contraseña
@@ -86,6 +88,8 @@ ALLOWED_EMAILS=person-a@example.com,person-b@example.com
 
 ## 4. Primera prueba local con identidad real
 
+Con ambos archivos guardados, ejecuta `npm run setup:check`. Valida formatos y coincidencias sin imprimir valores; no sustituye el acceso real a los servicios.
+
 1. Detén la vista local anterior y reinicia tras guardar `.env.local`.
 2. Ejecuta `npm run build`.
 3. Ejecuta `npm run worker:dev -- --local --ip 127.0.0.1 --port 8787` en una terminal y abre `http://127.0.0.1:8787/`. Sirve frontend y API desde el mismo origen. Mantén esta terminal abierta durante la prueba. La URL de Vite (`5173`) es una vista de desarrollo distinta; para este ensayo usa `8787`.
@@ -113,6 +117,7 @@ Comunicar qué pasos pasan o el texto de los errores, sin pegar credenciales ni 
 El primer despliegue abre la instalación privada. Completa las comprobaciones de esta sección para validar el acceso y funcionamiento desde Internet.
 
 1. Revisa `wrangler.jsonc`. Cambia `name` si deseas otro nombre de instalación; no cambies la clase, el binding ni las migraciones de Durable Objects.
+   Comprueba el destino en tu cuenta: no sobreescribas un Worker existente de otro proyecto. Ejecuta `npm run check:public -- --history` antes de publicar código o configuración.
 2. Ejecuta `npm run build` y `npx wrangler deploy`. Si aún no hay secretos remotos, la API permanecerá cerrada; no permite acceso por defecto.
 3. Conserva la URL `https://…workers.dev` que imprime Wrangler.
 4. Configura los valores del backend mediante prompts interactivos:

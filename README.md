@@ -13,7 +13,7 @@ Una habitación virtual privada para acompañaros mientras trabajáis, estudiái
 [![TypeScript](https://img.shields.io/badge/TypeScript-React_%2B_Phaser-667f88?style=flat-square)](#tecnología)
 [![Self-hosted](https://img.shields.io/badge/self--hosted-para_dos-bb7b67?style=flat-square)](docs/SETUP.md)
 
-[Explorar en local](#probar-en-tu-ordenador) · [Instalar vuestra casa](docs/SETUP.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md)
+[Instalar con tu agente de IA](docs/AI_SETUP.md) · [Explorar en local](#probar-en-tu-ordenador) · [Instalación manual](docs/SETUP.md) · [Arquitectura](docs/ARCHITECTURE.md) · [Contribuir](CONTRIBUTING.md)
 
 </div>
 
@@ -54,6 +54,18 @@ El editor se organiza en Rostro, Pelo, Ropa y Colores. Puedes girar la previsual
 </details>
 
 ## Probar en tu ordenador
+
+### Montarlo con Codex u otro agente
+
+Haz un **fork y clónalo**, o descarga el ZIP, y abre esa carpeta en tu herramienta de IA. El repositorio incluye [AGENTS.md](AGENTS.md) para orientar al agente y una [guía completa de instalación asistida](docs/AI_SETUP.md), desde crear los servicios hasta probar las dos cuentas.
+
+Puedes empezar con este mensaje:
+
+> Lee AGENTS.md y docs/AI_SETUP.md. Ayúdame a instalar y publicar mi propia casa en mis cuentas de Cloudflare y Firebase, usando los planes gratuitos. Ejecuta lo que puedas y guíame con pasos concretos cuando tenga que intervenir. No me pidas contraseñas ni claves por chat y comprueba los dos accesos antes de darlo por terminado.
+
+El agente prepara el código, la configuración y el despliegue. Tú completas las altas, autorizaciones de tus cuentas y verificaciones de correo. Cada pareja usa sus propios servicios y datos; no necesita acceso a la instalación de quien creó el proyecto.
+
+### Arrancar solo la demo
 
 Necesitas **Node.js 22.12 o posterior** y npm. El flujo de validación utiliza Node.js 24.
 
@@ -183,6 +195,8 @@ El movimiento lógico llega al destino antes de terminar la animación visual, l
 | --- | --- |
 | `npm run dev` | Vite en localhost, con proxy de `/api` al puerto 8787 |
 | `npm run typecheck` | TypeScript del cliente y del Worker |
+| `npm run setup:check` | Valida la configuración local de tu casa sin mostrar valores |
+| `npm run check:public -- --history` | Revisa archivos distribuibles, patrones sensibles, valores locales e historial Git |
 | `npm test` | Pruebas unitarias de dominio y cliente |
 | `npm run build` | Comprobación de tipos y salida estática en `dist/` |
 | `npm run worker:dev` | Worker y archivos compilados mediante Wrangler |
@@ -202,6 +216,7 @@ our-cozy-room/
 ├── shared/             Modelo, validación, caminos y avatares
 ├── worker/             API, autenticación y Durable Object
 ├── tests/              Pruebas unitarias y de integración
+├── scripts/            Revisión pública y validación de configuración
 ├── public/             Archivos estáticos, audio y créditos
 └── docs/               Instalación, arquitectura y recursos
 ```

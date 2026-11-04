@@ -9,6 +9,8 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.worker.json --noEmit",
+    "check:public": "node scripts/check-public.mjs",
+    "setup:check": "node scripts/check-setup.mjs",
     "test": "vitest run",
     "worker:dev": "wrangler dev",
     "deploy": "npm run build && wrangler deploy",
