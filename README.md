@@ -57,6 +57,8 @@ El editor se organiza en Rostro, Pelo, Ropa y Colores. Puedes girar la previsual
 
 ### Montarlo con Codex u otro agente
 
+![Arquitectura de una casa para dos. Cada navegador dibuja la habitación con React y Phaser. Firebase Authentication verifica los correos. En Cloudflare, Static Assets sirve la web, el Worker permite el acceso a los dos correos autorizados y un Durable Object sincroniza la sala por WebSocket y guarda su estado en SQLite.](docs/media/arquitectura-casa.png)
+
 Haz un **fork y clónalo**, o descarga el ZIP, y abre esa carpeta en tu herramienta de IA. El repositorio incluye [AGENTS.md](AGENTS.md) para orientar al agente y una [guía completa de instalación asistida](docs/AI_SETUP.md), desde crear los servicios hasta probar las dos cuentas.
 
 Puedes empezar con este mensaje:

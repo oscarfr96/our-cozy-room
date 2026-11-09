@@ -15,6 +15,7 @@ La dirección visual se inspira en los espacios sociales isométricos y los jueg
 | `docs/media/github-banner-real.png` | Composición tipográfica con una captura del renderer real, sin redibujar el escenario ni los personajes; datos ficticios de demostración | Banner del README |
 | `docs/media/room-overview.png` | Captura real de una demostración local con nombre y tarea ficticios | Mostrar el producto implementado |
 | `docs/media/wardrobe.png` | Captura real del editor con personaje ficticio | Mostrar la personalización manual |
+| `docs/media/arquitectura-casa.png` | Infografía generada con IA a partir de la arquitectura documentada y con la captura de la demo como referencia visual | Explicar qué servicios configura el agente para cada pareja |
 
 El banner utiliza los mismos `RoomCanvas`, `RoomScene` y avatares que la aplicación. La escena contiene dos personajes ficticios sentados en sus escritorios y una iluminación de demostración disponible en el juego. El fondo, la tipografía y los textos exteriores componen la pieza promocional; el mobiliario y los personajes se capturan directamente del motor, sin generación ni retoque con IA. No contiene cuentas, mensajes ni datos de una casa privada.
 
