@@ -33,6 +33,7 @@ describe('Protección del repositorio público', () => {
       writeFileSync(path.join(directory, '.env.backup'), 'ghp_' + 'b'.repeat(36));
       git(['add', '.gitignore']);
       git(['add', '-f', '.env.backup']);
+      writeFileSync(path.join(directory, '.dev.vars'), 'ALLOWED_EMAILS=test@example.com,other@example.com\n');
       const identity = ['-c', 'user.name=Test', '-c', 'user.email=test@example.com'];
       git([...identity, 'commit', '-qm', 'Fixture with an unsafe historical file']);
       unlinkSync(path.join(directory, '.env.backup'));
@@ -42,6 +43,7 @@ describe('Protección del repositorio público', () => {
       expect(auditPublic(directory, true).findings).toEqual(expect.arrayContaining([
         expect.objectContaining({ file: '.env.backup', source: 'historial', reason: 'archivo privado en el historial' }),
         expect.objectContaining({ reason: 'token GitHub', source: 'historial' }),
+        expect.objectContaining({ reason: 'valor de configuración local', source: 'metadatos del commit' }),
       ]));
     } finally {
       // Verify the exact temporary test root before a recursive removal on Windows.

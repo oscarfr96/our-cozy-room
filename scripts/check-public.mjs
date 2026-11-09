@@ -4,10 +4,11 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const examples = new Set(['.env.example', '.dev.vars.example']);
-const privateDirectories = new Set(['.local', '.wrangler', '.firebase', '.agents', '.codex', '.aws', '.secrets', 'secrets', 'node_modules', 'dist', 'coverage', 'test-results']);
+const privateDirectories = new Set(['.local', '.wrangler', '.firebase', '.agents', '.codex', '.aws', '.ssh', '.secrets', 'secrets', 'node_modules', 'dist', 'coverage', 'test-results']);
 
 export function privatePath(file) {
   const parts = file.replaceAll('\\', '/').split('/');
+  if (/^docs\/(decisions|design|screenshots)\//i.test(parts.join('/'))) return true;
   const name = parts.at(-1);
   if (parts.some(part => privateDirectories.has(part))) return true;
   if (name === 'PLAN_MAESTRO.md' || name === '.npmrc') return true;
@@ -88,15 +89,26 @@ export function auditPublic(cwd, history = false) {
   }
   let blobs = 0;
   if (history && inGit) {
-    let objects = [];
-    try { objects = git(['rev-list', '--objects', '--all'], cwd).trim().split('\n').filter(Boolean); } catch { /* New repository without commits. */ }
+    // One blob may have appeared under several names. Inspect each commit's
+    // paths as well as its public author, committer, and message.
+    const commits = git(['rev-list', '--all'], cwd).trim().split('\n').filter(Boolean);
+    const historicalNames = new Set();
+    for (const commit of commits) {
+      const metadata = git(['cat-file', 'commit', commit], cwd);
+      for (const reason of inspectText(metadata, values)) record(commit.slice(0, 12), reason, 'metadatos del commit');
+      for (const file of git(['ls-tree', '-rz', '--name-only', commit], cwd).split('\0').filter(Boolean)) historicalNames.add(file);
+    }
+    for (const file of historicalNames) {
+      if (privatePath(file)) record(file, 'archivo privado en el historial', 'historial');
+      for (const reason of inspectText(file, values)) record(file, reason, 'ruta histórica');
+    }
+    const objects = git(['rev-list', '--objects', '--all'], cwd).trim().split('\n').filter(Boolean);
     if (objects.length) {
       const types = git(['cat-file', '--batch-check=%(objectname) %(objecttype)'], cwd, { input: objects.map(line => line.split(' ')[0]).join('\n') + '\n' }).trim().split('\n');
       for (let index = 0; index < objects.length; index++) {
         if (!types[index].endsWith(' blob')) continue;
         const separator = objects[index].indexOf(' '), file = objects[index].slice(separator + 1);
         blobs++;
-        if (privatePath(file)) record(file, 'archivo privado en el historial', 'historial');
         for (const reason of inspectText(git(['cat-file', 'blob', objects[index].slice(0, separator)], cwd), values)) record(file, reason, 'historial');
       }
     }

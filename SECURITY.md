@@ -36,6 +36,8 @@ No se ha realizado una auditoría externa ni una prueba de carga de producción.
 
 ## Proteger un fork y su historial
 
+Git publica el correo del autor y del committer con cada commit. Si quieres mantener tu dirección privada, configura en este clon la dirección `noreply` que aparece en los ajustes de correo de tu cuenta de GitHub antes de crear commits. El control de historial compara también esos metadatos y los mensajes de commit con los valores privados disponibles localmente. CI solo puede contrastar los valores presentes en su entorno.
+
 Las únicas plantillas de entorno distribuibles son `.env.example` y `.dev.vars.example`. La configuración real, el estado local y las claves quedan ignorados. `npm run check:public -- --history` revisa los archivos candidatos y objetos de los commits accesibles; CI lo ejecuta con el historial completo. Detecta rutas privadas, algunos formatos de tokens y claves, coincidencias con valores de `.env.local`/`.dev.vars` y enlaces locales rotos. Solo muestra archivo y categoría, sin el contenido encontrado.
 
 El análisis no interpreta imágenes ni reconoce todo posible secreto. Revisa capturas y cambios antes de publicarlos. Si una credencial se expuso, revócala o rótala: borrarla del último commit no basta para quitarla del historial. La configuración web Firebase se incorpora al frontend y es pública por diseño; nunca debe contener credenciales administrativas. No se necesita una cuenta de servicio para instalar este proyecto.
